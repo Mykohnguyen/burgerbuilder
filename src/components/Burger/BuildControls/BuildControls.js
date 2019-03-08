@@ -20,8 +20,11 @@ const buildControls = props => (
                 addIngredient={() => { props.addIngredient(c.type); }}
                 removeIngredient={() => { props.removeIngredient(c.type); }} />
             ))}
-        {props.purchasble ? <button>Order Now</button> : null}
+        {props.purchasble ?
+            <button
+                onClick={props.purchasing}>Order Now</button> : null}
     </div>
+
     );
 
 export default buildControls;
