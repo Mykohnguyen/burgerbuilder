@@ -78,36 +78,40 @@ module.exports = function (env) {
                  */
                 {
                     test: /\.css$/,
-                    loader: isProduction ?
-                        ExtractTextPlugin.extract({ fallback: 'style-loader', use: [
-                            {
-                                loader: require.resolve('css-loader'),
-                                option:{
-                                    importLoaders:1,
-                                    modules:true,
-                                    localIdentName: '[name]__[local]__[hash:based64;5]'
-                                }
-                            },
-                            {
-                                loader: require.resolve('postcss-loader'),
-                                options: {
-                                    plugins: () => [
-                                        require('postcss-flexbugs-fixes'),
-                                        autoprefixer({
-                                            browsers: [
-                                                '>1%',
-                                                'last 4 versions',
-                                                'Firefox ESR',
-                                                'not ie < 9',
-                                            ],
-                                            flexbox: 'no-2009',
-                                        }),
-                                    ],
-                                },
-                            }
-                        ] }) :
-                        [ 'style-loader', 'css-loader', ]
-                },
+                    loader: "style-loader!css-loader"
+                }, {
+                    test: /\.(jpe?g|png|gif|woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
+                    loader: 'url-loader?limit=100000' },
+                    // loader: isProduction ?
+                    //     ExtractTextPlugin.extract({ fallback: 'style-loader', use: [
+                    //         {
+                    //             loader: require.resolve('css-loader'),
+                    //             option:{
+                    //                 importLoaders:1,
+                    //                 modules:true,
+                    //                 localIdentName: '[name]__[local]__[hash:based64:5]'
+                    //             }
+                    //         },
+                    //         {
+                    //             loader: require.resolve('postcss-loader'),
+                    //             options: {
+                    //                 plugins: () => [
+                    //                     require('postcss-flexbugs-fixes'),
+                    //                     autoprefixer({
+                    //                         browsers: [
+                    //                             '>1%',
+                    //                             'last 4 versions',
+                    //                             'Firefox ESR',
+                    //                             'not ie < 9',
+                    //                         ],
+                    //                         flexbox: 'no-2009',
+                    //                     }),
+                    //                 ],
+                    //             },
+                    //         }
+                    //     ] }) :
+                    //     [ 'style-loader', 'css-loader', ]
+                // },
                 /**
                  * json-loader
                  * https://github.com/webpack-contrib/json-loader

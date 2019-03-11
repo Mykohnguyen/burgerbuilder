@@ -8,7 +8,10 @@ const orderSummary = (props) => {
             <h3>Order Summary:</h3>
             <p> A delicious burger with the following ingredients:</p>
             {summary}
+            <p> Total Price:${props.totalprice.toFixed(2)}</p>
             <p> Continue to checkout?</p>
+            <button onClick={props.hide}>Cancel</button>
+            <button>Continue</button>
         </React.Fragment>
     );
 };

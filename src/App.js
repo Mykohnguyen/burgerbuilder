@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import Navbar from './components/Navbar';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
 import Layout from './components/Layout/Layout';
 // import Burger from './components/BurgerBuilder/Burger';
@@ -20,7 +19,6 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <Navbar />
                 <Layout>
                     <BurgerBuilder />
                 </Layout>
