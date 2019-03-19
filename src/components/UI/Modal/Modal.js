@@ -4,7 +4,6 @@ import Backdrop from '../Backdrop/Backdrop';
 
 const areEqual = (prevProps, nextProps) => (prevProps.show === nextProps.show);
 const modalValue = (props) => {
-    console.log('updating');
     return (
         <React.Fragment>
             <Backdrop
