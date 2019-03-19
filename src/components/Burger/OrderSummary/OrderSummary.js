@@ -2,6 +2,7 @@ import React from 'react';
 
 
 const orderSummary = (props) => {
+    console.log('ORDER SUMMARY UPDATED');
     const summary = Object.keys(props.ingredients).map(x => <li><span style={{ textTransform: 'capitalize' }}>{x}</span>:{props.ingredients[x]}</li>);
     return (
         <React.Fragment>
