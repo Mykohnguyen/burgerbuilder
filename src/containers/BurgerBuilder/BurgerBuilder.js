@@ -5,6 +5,8 @@ import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import axiosInstance from '../../Instance';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import errorHandler from '../.././hoc/ErrorHandler/ErrorHandler';
 
 class BurgerBuilder extends Component {
     ingredientPrices ={
@@ -26,6 +28,8 @@ class BurgerBuilder extends Component {
         total_price: 5,
         purchasble: false,
         purchasing: false,
+        loading: false,
+        testing: 'Bologna',
     }
 
     updatePurchasable(ingredients) {
@@ -84,6 +88,9 @@ class BurgerBuilder extends Component {
         });
     }
     continuePurchasing = () => {
+        this.setState({
+            loading: true,
+        });
         const order = {
             customer: {
                 name: 'Michael Nguyen',
@@ -94,9 +101,24 @@ class BurgerBuilder extends Component {
             ingredients: this.state.ingredients,
             total_price: this.state.total_price,
         };
-        axiosInstance.post('/orders.json', order);
+        axiosInstance.post('/orders', order)
+            .then(
+                    this.setState({ loading: false, purchasing: false }),
+            )
+            .catch(
+                    this.setState({ loading: false, purchasing: false }),
+            );
     }
     render() {
+        let orderSummary =
+            (<OrderSummary
+                ingredients={this.state.ingredients}
+                hide={this.hideModal}
+                totalprice={this.state.total_price}
+                continuePurchasing={this.continuePurchasing} />);
+        if (this.state.loading) {
+            orderSummary = <Spinner />;
+        }
         return (
             <div>
                 <p>Total Price:<b>${this.state.total_price.toFixed(2)}</b></p>
@@ -104,11 +126,7 @@ class BurgerBuilder extends Component {
                 <Modal
                     show={this.state.purchasing}
                     hide={this.hideModal}>
-                    <OrderSummary
-                        ingredients={this.state.ingredients}
-                        hide={this.hideModal}
-                        totalprice={this.state.total_price}
-                        continuePurchasing={this.continuePurchasing} />
+                    {orderSummary}
                 </Modal>
                 <BuildControls
                     addIngredient={this.addIngredient}
@@ -121,4 +139,4 @@ class BurgerBuilder extends Component {
     }
 }
 
-export default BurgerBuilder;
+export default errorHandler(BurgerBuilder, axiosInstance);

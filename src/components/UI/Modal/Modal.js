@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import './Modal.css';
 import Backdrop from '../Backdrop/Backdrop';
 
 const areEqual = (prevProps, nextProps) => (prevProps.show === nextProps.show);
 const modalValue = props => (
-    <React.Fragment>
+    <Fragment>
         <Backdrop
             show={props.show}
             clicked={props.hide} />
@@ -16,7 +16,7 @@ const modalValue = props => (
                 className="Close"
                 onClick={props.hide}>X</button>
         </div>
-    </React.Fragment>
+    </Fragment>
     );
 const modal = React.memo(modalValue, areEqual);
 export default modal;
