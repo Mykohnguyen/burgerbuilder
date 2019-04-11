@@ -7,15 +7,24 @@ const errorHandler = (WrappedComponent, axiosInstance) => class extends Componen
     }
 
     componentDidMount() {
-        axiosInstance.interceptors.request.use((req) => {
+        this.reqInterceptors = axiosInstance.interceptors.request.use((req) => {
             this.setState({
                 error: null,
             });
             return req;
         });
-        axiosInstance.interceptors.response.use(null, (error) => {
+        this.resInterceptors = axiosInstance.interceptors.response.use(res => (error) => {
             this.setState({ error });
+            return res;
         });
+    }
+    componentWillUnmount() {
+        axiosInstance.interceptors.request.eject(this.reqInterceptors);
+        axiosInstance.interceptors.response.eject(this.resInterceptors);
+        console.log('component unmount');
+
+        // this will help with memory leak from interceptors being attached everytime
+        // the burgerbuilder component is mounted
     }
     exitModal=() => {
         this.setState({

@@ -13,7 +13,11 @@ class App extends Component {
         // fetch('/api/category')
         //     .then(resp => resp.json())
         //     .then(res => console.log('here here', res));
-
+        setTimeout(() => {
+            this.setState({
+                show: false,
+            });
+        }, 5000);
     }
 
     render() {

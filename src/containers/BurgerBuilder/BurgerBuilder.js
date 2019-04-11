@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 // import Aux from '../../hoc/aux';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -18,18 +18,29 @@ class BurgerBuilder extends Component {
     }
 
     state={
-        ingredients: {
-            meat: 0,
-            cheese: 0,
-            salad: 0,
-            bacon: 0,
-            tomato: 0,
-        },
+        ingredients: null,
         total_price: 5,
         purchasble: false,
         purchasing: false,
         loading: false,
-        testing: 'Bologna',
+        loadingBackend: true,
+        error: false,
+        errorMessage: null,
+    }
+    componentDidMount() {
+        axiosInstance.get('https://burger-builder-react-fbd35.firebaseio.com/ingredients.json')
+            .then((response) => {
+                this.setState({
+                    ingredients: response.data,
+                    loadingBackend: false,
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    error: true,
+                    errorMessage: error.message,
+                });
+            });
     }
 
     updatePurchasable(ingredients) {
@@ -101,7 +112,7 @@ class BurgerBuilder extends Component {
             ingredients: this.state.ingredients,
             total_price: this.state.total_price,
         };
-        axiosInstance.post('/orders', order)
+        axiosInstance.post('/orders.json', order)
             .then(
                     this.setState({ loading: false, purchasing: false }),
             )
@@ -110,29 +121,35 @@ class BurgerBuilder extends Component {
             );
     }
     render() {
-        let orderSummary =
-            (<OrderSummary
+        let orderSummary = null;
+        let burgeringredients = this.state.error ? <p> {this.state.errorMessage} </p> : <Spinner />;
+        if (this.state.ingredients) {
+            burgeringredients = (<Fragment>
+                <Burger ingredients={this.state.ingredients} />
+                <BuildControls
+                    addIngredient={this.addIngredient}
+                    removeIngredient={this.removeIngredient}
+                    purchasble={this.state.purchasble}
+                    purchasing={this.purchasing} />
+            </Fragment>);
+            orderSummary = (<OrderSummary
                 ingredients={this.state.ingredients}
                 hide={this.hideModal}
                 totalprice={this.state.total_price}
                 continuePurchasing={this.continuePurchasing} />);
+        }
         if (this.state.loading) {
             orderSummary = <Spinner />;
         }
         return (
             <div>
                 <p>Total Price:<b>${this.state.total_price.toFixed(2)}</b></p>
-                <Burger ingredients={this.state.ingredients} />
+                {burgeringredients}
                 <Modal
                     show={this.state.purchasing}
                     hide={this.hideModal}>
                     {orderSummary}
                 </Modal>
-                <BuildControls
-                    addIngredient={this.addIngredient}
-                    removeIngredient={this.removeIngredient}
-                    purchasble={this.state.purchasble}
-                    purchasing={this.purchasing} />
             </div>
 
         );
